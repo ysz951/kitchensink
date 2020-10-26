@@ -43,6 +43,9 @@ public class Team implements Serializable {
     @Pattern(regexp = "[^0-9]*", message = "Must not contain numbers")
     private String name;
     
+    @NotNull
+    private boolean editTeam;
+    
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -96,6 +99,22 @@ public class Team implements Serializable {
 
 	public void setCoach(Member coach) {
 		this.coach = coach;
+	}
+
+	public Contest getContest() {
+		return contest;
+	}
+
+	public void setContest(Contest contest) {
+		this.contest = contest;
+	}
+
+	public boolean isEditTeam() {
+		return editTeam;
+	}
+
+	public void setEditTeam(boolean editTeam) {
+		this.editTeam = editTeam;
 	}
     
     

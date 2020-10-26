@@ -35,18 +35,9 @@ public class TeamUpdate {
     @Inject
     private EntityManager em;
 
-    @Inject
-    private Event<Team> memberEventSrc;
-    
-    @Inject
-    private TeamRepository teamRepository;
     
     public void update(Team upd) throws Exception {
-//	 log.info(String.format("Member new name: %1$s", m.getName()));
-//     log.info(String.format("Member new phone number: %1$s", m.getPhoneNumber()));
-//     log.info(String.format("Member new email: %1$s", m.getEmail()));
-        
+
         em.merge(upd);
-        memberEventSrc.fire(upd);
     }
 }

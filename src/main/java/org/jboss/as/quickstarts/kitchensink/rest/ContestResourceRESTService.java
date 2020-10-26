@@ -16,8 +16,6 @@
  */
 package org.jboss.as.quickstarts.kitchensink.rest;
 
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,16 +52,15 @@ import org.jboss.as.quickstarts.kitchensink.service.TeamRegistration;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
 import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
-import org.jboss.as.quickstarts.kitchensink.service.ContestUpdate;
 import org.jboss.as.quickstarts.kitchensink.service.ContestRegistration;
 /**
  * JAX-RS Example
  * <p/>
  * This class produces a RESTful service to read/write the contents of the members table.
  */
-@Path("/populate")
+@Path("/contests")
 @RequestScoped
-public class PopulateResourceRESTService {
+public class ContestResourceRESTService {
 
     @Inject
     private Logger log;
@@ -72,95 +69,95 @@ public class PopulateResourceRESTService {
     private Validator validator;
 
     @Inject
-    private TeamRepository teamRepository;
+    private ContestRepository repository;
     
     @Inject
     private MemberRepository memberRepository;
     
     @Inject
-    private ContestRepository contestRepository;
-    
-    @Inject
-    TeamRegistration teamRegistration;
-    
-    @Inject
-    MemberRegistration memberRegistration;
+    TeamRegistration registration;
     
     @Inject
     ContestRegistration contestRegistration;
     
     @Inject
-    MemberUpdate memberUpdate;
-    
-    @Inject
-    TeamUpdate teamUpdate;
-    
-    @Inject
-    ContestUpdate contestUpdate;
+    TeamUpdate update;
 //    
 //    @Inject
 //    MemberDelete delete;
     
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response populate() {
-    	Date date1 = new Date(2006, 11, 12);
-        Date date2 = new Date(2015, 3, 21);
-        Date date3 = new Date(2016, 9, 24);
-        Response.ResponseBuilder builder = null;
-        try {
-            Team t1 = createTeam("teamOne");
-            Member m1 = createMember("memberOne", "m1@mm.com");
-            Member m2 = createMember("memberTwo", "m2@mm.com");
-            Member m3 = createMember("memberThree", "m3@mm.com");
-        	Member c1 = createMember("coachOne", "coach1@mm.com");
-        	Contest contest = createContest(2, date1, "contest", true, date2, date3);
-            Contest subcontest = createContest(3, date2, "subcontest", true, date2, date3);
-            m1.setTeam(t1);
-            memberUpdate.update(m1); 
-            m2.setTeam(t1);
-            memberUpdate.update(m2);
-            m3.setTeam(t1);
-            memberUpdate.update(m3);
-            t1.setCoach(c1);
-            teamUpdate.update(t1);
-            
-            subcontest.setParentContest(contest);
-            contestUpdate.update(subcontest);
-            
-            builder = Response.ok();
-        } catch (Exception e) {
-            Map<String, String> responseObj = new HashMap<>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+    public List<Contest> listAllMembers() {
+        return repository.findAllOrderedById();
+    }
+
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Contest lookupContestById(@PathParam("id") long id) {
+        Contest contest = repository.findById(id);
+        System.out.println((int) id);
+        if (contest == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return builder.build();
-    }
-    
-    private Member createMember(String name, String email) throws Exception {
-    	Member m = new Member();
-    	m.setName(name);
-    	m.setEmail(email);
-    	memberRegistration.register(m);
-    	return m;
-    }
-    
-    private Team createTeam(String name) throws Exception {
-    	Team t = new Team();
-    	t.setName(name);
-    	teamRegistration.register(t);
-    	return t;
-    }
-    
-    private Contest createContest(int capacity, Date date, String name, boolean registration_allowed, Date registration_from, Date registration_to) throws Exception {
-        Contest contest = new Contest();
-        contest.setName(name);
-        contest.setCapacity(capacity);
-        contest.setRegistration_allowed(registration_allowed);
-        contest.setRegistration_from(registration_from);
-        contest.setRegistration_to(registration_to);
-        contest.setDate(date);
-        contestRegistration.register(contest);
         return contest;
     }
+    
+    
+    /**
+     * Creates a new member from the values provided. Performs validation, and will return a JAX-RS response with either 200 ok,
+     * or with a map of fields, and related errors.
+     */
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response createMember(Team team) {
+////    	if (team.getCoach() != null) {
+////    		Member m = memberRepository.findById(team.getCoach().getId());
+////        	team.setCoach(m);
+////    	}
+//        Response.ResponseBuilder builder = null;
+//        System.out.println("team name is " + team.getName());
+//        try {
+//            // Validates member using bean validation
+////            validateMember(member);
+//
+//            registration.register(team);
+////            Member t = lookupMemberById(Long.valueOf(0));
+//            // Create an "ok" response
+//            builder = Response.ok();
+//        } catch (Exception e) {
+//            // Handle generic exceptions
+//            Map<String, String> responseObj = new HashMap<>();
+//            responseObj.put("error", e.getMessage());
+//            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+//        }
+//
+//        return builder.build();
+//    }
+    
+    
+    
+
+    /**
+     * Creates a JAX-RS "Bad Request" response including a map of all violation fields, and their message. This can then be used
+     * by clients to show violations.
+     *
+     * @param violations A set of violations that needs to be reported
+     * @return JAX-RS response containing all violations
+     */
+    private Response.ResponseBuilder createViolationResponse(Set<ConstraintViolation<?>> violations) {
+        log.fine("Validation completed. violations found: " + violations.size());
+
+        Map<String, String> responseObj = new HashMap<>();
+
+        for (ConstraintViolation<?> violation : violations) {
+            responseObj.put(violation.getPropertyPath().toString(), violation.getMessage());
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+    }
+
+
 }

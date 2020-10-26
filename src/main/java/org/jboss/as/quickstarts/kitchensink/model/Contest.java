@@ -163,5 +163,5 @@ public class Contest implements Serializable{
         this.registration_to = registration_to;
     }
 
-
+    
 }

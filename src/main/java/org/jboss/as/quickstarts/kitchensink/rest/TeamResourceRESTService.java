@@ -147,10 +147,12 @@ public class TeamResourceRESTService {
 
         Response.ResponseBuilder builder = null;
 //        Member member = repository.findById(id);
-        Team upd = repository.findById(id);
         
-        upd.setName(t.getName());
         try {
+        	Team upd = repository.findById(id);
+        	validate(upd);
+            upd.setName(t.getName());
+            upd.setEditTeam(t.isEditTeam());
             update.update(upd);
             builder = Response.ok();
         } catch (Exception e) {
@@ -177,9 +179,16 @@ public class TeamResourceRESTService {
         try {
             update.update(upd);
             builder = Response.ok();
-        } catch (Exception e) {
+        } 
+        catch (ValidationException e) {
+          // Handle the unique constrain violation
+        	Map<String, String> responseObj = new HashMap<>();
+        	responseObj.put("team", "Team can't be editted");
+        	builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+        }
+        catch (Exception e) {
             // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<>();
+        	Map<String, String> responseObj = new HashMap<>();
             responseObj.put("error", e.getMessage());
             builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
         }
@@ -280,13 +289,7 @@ public class TeamResourceRESTService {
      * @param email The email to check
      * @return True if the email already exists, and false otherwise
      */
-//    public boolean emailAlreadyExists(String email) {
-//        Member member = null;
-//        try {
-//            member = repository.findByEmail(email);
-//        } catch (NoResultException e) {
-//            // ignore
-//        }
-//        return member != null;
-//    }
+    public void validate(Team t) throws ValidationException{
+    	if (!t.isEditTeam()) throw new ValidationException("This team can't be editted");
+    }
 }

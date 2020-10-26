@@ -14,32 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.kitchensink.service;
+package org.jboss.as.quickstarts.kitchensink.data;
 
-import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Member;
-
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.logging.Logger;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
 
-// The @Stateless annotation eliminates the need for manual transaction demarcation
-@Stateless
-public class MemberUpdate {
+import org.jboss.as.quickstarts.kitchensink.model.Contest;
 
-    @Inject
-    private Logger log;
+@ApplicationScoped
+public class ContestRepository {
 
     @Inject
     private EntityManager em;
     
-    public void update(Member upd) throws Exception {
-//	 log.info(String.format("Member new name: %1$s", m.getName()));
-//     log.info(String.format("Member new phone number: %1$s", m.getPhoneNumber()));
-//     log.info(String.format("Member new email: %1$s", m.getEmail()));
-        
-        em.merge(upd);
+    
+    public Contest findById(Long id) {
+        return em.find(Contest.class, id);
+    }
+    
+    
+    public List<Contest> findAllOrderedById() {
+    	CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Contest> criteria = cb.createQuery(Contest.class);
+        Root<Contest> contest = criteria.from(Contest.class);
+        criteria.select(contest).orderBy(cb.asc(contest.get("id")));
+        return em.createQuery(criteria).getResultList();
     }
 }
