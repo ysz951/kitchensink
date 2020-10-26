@@ -17,28 +17,22 @@
 package org.jboss.as.quickstarts.kitchensink.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import java.util.*;
 
 @SuppressWarnings("serial")
 @Entity
 @XmlRootElement
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Member implements Serializable {
+@Table
+public class Team implements Serializable {
 
     @Id
     @GeneratedValue
@@ -48,26 +42,21 @@ public class Member implements Serializable {
     @Size(min = 1, max = 25)
     @Pattern(regexp = "[^0-9]*", message = "Must not contain numbers")
     private String name;
-
-    @NotNull
-    @NotEmpty
-    @Email
-    private String email;
+    
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    @JsonIdentityReference(alwaysAsId=true)
+    @Size(max = 3)
+    private Set<Member> members = new HashSet<>();
     
     @ManyToOne(fetch = FetchType.LAZY)
-    //annotation bellow is just for Jackson serialization in controller
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId=true)
-    private Team team;
-    
-    @OneToMany(mappedBy = "coach", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    @JsonIdentityReference(alwaysAsId=true)
-    private Set<Team> coach_team = new HashSet<>();
+    private Member coach;
     
     public Long getId() {
         return id;
@@ -85,28 +74,20 @@ public class Member implements Serializable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-	public Team getTeam() {
-		return team;
+	public Set<Member> getMembers() {
+		return members;
 	}
 
-	public void setTeam(Team team) {
-		this.team = team;
+	public void setMembers(Set<Member> members) {
+		this.members = members;
 	}
 
-	public Set<Team> getCoach_team() {
-		return coach_team;
+	public Member getCoach() {
+		return coach;
 	}
 
-	public void setCoach_team(Set<Team> coach_team) {
-		this.coach_team = coach_team;
+	public void setCoach(Member coach) {
+		this.coach = coach;
 	}
     
     

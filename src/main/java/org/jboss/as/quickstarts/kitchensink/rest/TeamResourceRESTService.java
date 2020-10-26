@@ -42,21 +42,22 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Team;
-import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
-import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
-import org.jboss.as.quickstarts.kitchensink.service.MemberDelete;
+import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.service.TeamRegistration;
+import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
+//import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
+//import org.jboss.as.quickstarts.kitchensink.service.MemberDelete;
 /**
  * JAX-RS Example
  * <p/>
  * This class produces a RESTful service to read/write the contents of the members table.
  */
-@Path("/members")
+@Path("/teams")
 @RequestScoped
-public class MemberResourceRESTService {
+public class TeamResourceRESTService {
 
     @Inject
     private Logger log;
@@ -65,38 +66,46 @@ public class MemberResourceRESTService {
     private Validator validator;
 
     @Inject
-    private MemberRepository repository;
+    private TeamRepository repository;
     
     @Inject
-    private TeamRepository teamRepository;
+    private MemberRepository memberRepository;
     
     @Inject
-    MemberRegistration registration;
+    TeamRegistration registration;
     
     @Inject
-    MemberUpdate update;
-    
-    @Inject
-    MemberDelete delete;
+    TeamUpdate update;
+//    
+//    @Inject
+//    MemberDelete delete;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Member> listAllMembers() {
+    public List<Team> listAllMembers() {
         return repository.findAllOrderedById();
     }
 
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Member lookupMemberById(@PathParam("id") long id) {
-        Member member = repository.findById(id);
+    public Team lookupMemberById(@PathParam("id") long id) {
+        Team team = repository.findById(id);
         System.out.println((int) id);
-        if (member == null) {
+        if (team == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        return member;
+        return team;
     }
-
+    
+    @GET
+    @Path("/whe")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Team> whereTeam() {
+        List<Team> team = repository.whereTeam();
+        return team;
+    }
+    
     /**
      * Creates a new member from the values provided. Performs validation, and will return a JAX-RS response with either 200 ok,
      * or with a map of fields, and related errors.
@@ -104,30 +113,21 @@ public class MemberResourceRESTService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createMember(Member member) {
-//    	if (member.getTeam() != null) {
-//    		Team t = teamRepository.findById(member.getTeam().getId());
-//        	member.setTeam(t);
+    public Response createMember(Team team) {
+//    	if (team.getCoach() != null) {
+//    		Member m = memberRepository.findById(team.getCoach().getId());
+//        	team.setCoach(m);
 //    	}
-    	
         Response.ResponseBuilder builder = null;
-
+        System.out.println("team name is " + team.getName());
         try {
             // Validates member using bean validation
 //            validateMember(member);
 
-            registration.register(member);
+            registration.register(team);
 //            Member t = lookupMemberById(Long.valueOf(0));
             // Create an "ok" response
             builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
         } catch (Exception e) {
             // Handle generic exceptions
             Map<String, String> responseObj = new HashMap<>();
@@ -143,36 +143,16 @@ public class MemberResourceRESTService {
     @Path("/{id:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateMember(@PathParam("id") long id, Member m) {
-    	System.out.println("ok");
-    	System.out.println((int) id);
-    	System.out.println(m.getName());
+    public Response updateTeam(@PathParam("id") long id, Team t) {
+
         Response.ResponseBuilder builder = null;
 //        Member member = repository.findById(id);
-        Member upd = repository.findById(id);
+        Team upd = repository.findById(id);
         
-        upd.setName(m.getName());
-        upd.setEmail(m.getEmail());
-        
-//        if (member == null) {
-//            throw new WebApplicationException(Response.Status.NOT_FOUND);
-//        }
+        upd.setName(t.getName());
         try {
-            // Validates member using bean validation
-//            validateMember(upd);
-
             update.update(upd);
-//            Member t = lookupMemberById(Long.valueOf(0));
-            // Create an "ok" response
             builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
         } catch (Exception e) {
             // Handle generic exceptions
             Map<String, String> responseObj = new HashMap<>();
@@ -183,36 +163,20 @@ public class MemberResourceRESTService {
         return builder.build();
     }
     
-    @DELETE
-    @Path("/{id:[0-9][0-9]*}")
+    @PUT
+    @Path("/coach/{id:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMember(@PathParam("id") long id) {
-    	System.out.println("delete");
-    	System.out.println((int) id);
+    public Response updateTeam(@PathParam("id") long id, Member m) {
+
         Response.ResponseBuilder builder = null;
 //        Member member = repository.findById(id);
-        Member upd = repository.findById(id);
-        
-//        if (member == null) {
-//            throw new WebApplicationException(Response.Status.NOT_FOUND);
-//        }
+        Team upd = repository.findById(id);
+        Member coach = memberRepository.findById(m.getId());
+        upd.setCoach(coach);
         try {
-            // Validates member using bean validation
-//            validateMember(upd);
-
-            delete.delete(upd);
-//            Member t = lookupMemberById(Long.valueOf(0));
-            // Create an "ok" response
+            update.update(upd);
             builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
         } catch (Exception e) {
             // Handle generic exceptions
             Map<String, String> responseObj = new HashMap<>();
@@ -222,6 +186,46 @@ public class MemberResourceRESTService {
 
         return builder.build();
     }
+//    
+//    @DELETE
+//    @Path("/{id:[0-9][0-9]*}")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response deleteMember(@PathParam("id") long id) {
+//    	System.out.println("delete");
+//    	System.out.println((int) id);
+//        Response.ResponseBuilder builder = null;
+////        Member member = repository.findById(id);
+//        Member upd = repository.findById(id);
+//        
+////        if (member == null) {
+////            throw new WebApplicationException(Response.Status.NOT_FOUND);
+////        }
+//        try {
+//            // Validates member using bean validation
+////            validateMember(upd);
+//
+//            delete.delete(upd);
+////            Member t = lookupMemberById(Long.valueOf(0));
+//            // Create an "ok" response
+//            builder = Response.ok();
+//        } catch (ConstraintViolationException ce) {
+//            // Handle bean validation issues
+//            builder = createViolationResponse(ce.getConstraintViolations());
+//        } catch (ValidationException e) {
+//            // Handle the unique constrain violation
+//            Map<String, String> responseObj = new HashMap<>();
+//            responseObj.put("email", "Email taken");
+//            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
+//        } catch (Exception e) {
+//            // Handle generic exceptions
+//            Map<String, String> responseObj = new HashMap<>();
+//            responseObj.put("error", e.getMessage());
+//            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
+//        }
+//
+//        return builder.build();
+//    }
     /**
      * <p>
      * Validates the given Member variable and throws validation exceptions based on the type of error. If the error is standard
@@ -236,19 +240,19 @@ public class MemberResourceRESTService {
      * @throws ConstraintViolationException If Bean Validation errors exist
      * @throws ValidationException If member with the same email already exists
      */
-    private void validateMember(Member member) throws ConstraintViolationException, ValidationException {
-        // Create a bean validator and check for issues.
-        Set<ConstraintViolation<Member>> violations = validator.validate(member);
-
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(new HashSet<>(violations));
-        }
-
-        // Check the uniqueness of the email address
-        if (emailAlreadyExists(member.getEmail())) {
-            throw new ValidationException("Unique Email Violation");
-        }
-    }
+//    private void validateMember(Member member) throws ConstraintViolationException, ValidationException {
+//        // Create a bean validator and check for issues.
+//        Set<ConstraintViolation<Member>> violations = validator.validate(member);
+//
+//        if (!violations.isEmpty()) {
+//            throw new ConstraintViolationException(new HashSet<>(violations));
+//        }
+//
+//        // Check the uniqueness of the email address
+//        if (emailAlreadyExists(member.getEmail())) {
+//            throw new ValidationException("Unique Email Violation");
+//        }
+//    }
 
     /**
      * Creates a JAX-RS "Bad Request" response including a map of all violation fields, and their message. This can then be used
@@ -276,13 +280,13 @@ public class MemberResourceRESTService {
      * @param email The email to check
      * @return True if the email already exists, and false otherwise
      */
-    public boolean emailAlreadyExists(String email) {
-        Member member = null;
-        try {
-            member = repository.findByEmail(email);
-        } catch (NoResultException e) {
-            // ignore
-        }
-        return member != null;
-    }
+//    public boolean emailAlreadyExists(String email) {
+//        Member member = null;
+//        try {
+//            member = repository.findByEmail(email);
+//        } catch (NoResultException e) {
+//            // ignore
+//        }
+//        return member != null;
+//    }
 }

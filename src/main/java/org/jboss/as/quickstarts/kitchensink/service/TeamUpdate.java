@@ -16,16 +16,18 @@
  */
 package org.jboss.as.quickstarts.kitchensink.service;
 
-import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
+import org.jboss.as.quickstarts.kitchensink.model.Team;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.logging.Logger;
+
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
-public class MemberRegistration {
+public class TeamUpdate {
 
     @Inject
     private Logger log;
@@ -34,12 +36,17 @@ public class MemberRegistration {
     private EntityManager em;
 
     @Inject
-    private Event<Member> memberEventSrc;
+    private Event<Team> memberEventSrc;
     
+    @Inject
+    private TeamRepository teamRepository;
     
-    public void register(Member member) throws Exception {
-        log.info("Registering " + member.getName());
-        em.persist(member);
-        memberEventSrc.fire(member);
+    public void update(Team upd) throws Exception {
+//	 log.info(String.format("Member new name: %1$s", m.getName()));
+//     log.info(String.format("Member new phone number: %1$s", m.getPhoneNumber()));
+//     log.info(String.format("Member new email: %1$s", m.getEmail()));
+        
+        em.merge(upd);
+        memberEventSrc.fire(upd);
     }
 }
