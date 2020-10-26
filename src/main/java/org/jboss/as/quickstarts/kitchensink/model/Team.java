@@ -58,6 +58,14 @@ public class Team implements Serializable {
     @JsonIdentityReference(alwaysAsId=true)
     private Member coach;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    //annotation bellow is just for Jackson serialization in controller
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
+    @JsonIdentityReference(alwaysAsId=true)
+    private Contest contest;
+    
     public Long getId() {
         return id;
     }
