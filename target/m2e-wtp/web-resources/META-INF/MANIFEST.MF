@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Built-By: Shengyang
-Build-Jdk: 12.0.1
+Built-By: 11872
+Build-Jdk: 15.0.1
 Specification-Title: Quickstart: kitchensink
 Specification-Version: 7.2
 Specification-Vendor: JBoss by Red Hat
@@ -12,7 +12,7 @@ Created-By: Maven Integration for Eclipse
 Implementation-URL: http://www.jboss.org/jdf/quickstarts/get-started/kit
  chensink_temp/
 Java-Vendor: Oracle Corporation
-Java-Version: 12
+Java-Version: 15
 Os-Arch: amd64
 Os-Name: Windows 10
 Os-Version: 10.0
