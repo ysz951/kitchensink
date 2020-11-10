@@ -39,10 +39,12 @@ public class MemberUpdate {
     private Event<Member> memberEventSrc;
 
     public void update(Member upd) throws Exception {
-//	 log.info(String.format("Member new name: %1$s", m.getName()));
-//     log.info(String.format("Member new phone number: %1$s", m.getPhoneNumber()));
-//     log.info(String.format("Member new email: %1$s", m.getEmail()));
+
         em.merge(upd);
         memberEventSrc.fire(upd);
+    }
+    public void updateWithoutFire(Member upd) throws Exception {
+
+        em.merge(upd);
     }
 }

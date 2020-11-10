@@ -25,6 +25,8 @@
         <h:link value="Member" outcome="index.xhtml" />
         <h:outputText value="&#160;" />
         <h:link value="Team" outcome="team.xhtml" />
+        <h:outputText value="&#160;" />
+        <h:link value="Contest" outcome="contest.xhtml" />
         <div>
             <p>You have successfully deployed a Java EE Enterprise
                 Application.</p>
@@ -56,35 +58,13 @@
                 </h:panelGrid>
             </p>
         </h:form>
-        <h:form id="regTeam">
-            <h2>Team Registration</h2>
-            <h:panelGrid columns="3" columnClasses="titleCell">
-                <h:outputLabel for="teamname" value="Team Name:" />
-                <h:inputText id="teamname" value="#{newTeam.name}" />
-                <h:message for="teamname" errorClass="invalid" />
-
-                <h:outputLabel for="teammember" value="Team member:" />
+        <h:form styleClass="none">
                 <h:selectOneMenu id="teammember" binding="#{mem1}">       
                    <f:selectItems value="#{members}" var="member" itemValue="#{member.id}" itemLabel="#{member.name}" />
                 </h:selectOneMenu>
-                <br/>
-                <h:outputLabel for="teamedit" value="Team Edit:" />
-                <h:selectOneMenu id="teamedit" value="#{newTeam.editTeam}">       
-				   <f:selectItem itemValue="true" itemLabel="True" />
-                   <f:selectItem itemValue="false" itemLabel="False" />
-				</h:selectOneMenu>
-            </h:panelGrid>
-        
-            <p>
-                <h:panelGrid columns="2">
-                    <h:commandButton id="register"
+                <h:commandButton id="register"
                         action="#{teamController.registerAnother(mem1.value)}"
-                        value="Register" styleClass="register" />
-                    <h:messages styleClass="messages"
-                        errorClass="invalid" infoClass="valid"
-                        warnClass="warning" globalOnly="true" />
-                </h:panelGrid>
-            </p>
+                        value="Register" />  
         </h:form>
         
         <h:panelGroup rendered="#{empty teams}">
@@ -150,7 +130,7 @@
             <h:column>
                 <f:facet name="header">Team</f:facet>
                 #{_member.team.id}
-                <h:selectOneMenu binding="#{input1}">    
+                <h:selectOneMenu binding="#{input1}" >    
                    <f:selectItems value="#{teams}" var="team" itemValue="#{team.id}" itemLabel="#{team.id}" />
                 </h:selectOneMenu>
             </h:column>
@@ -181,5 +161,5 @@
             </f:facet>
         </h:dataTable>
 		</h:form >
-    </ui:define>
+	</ui:define>
 </ui:composition>

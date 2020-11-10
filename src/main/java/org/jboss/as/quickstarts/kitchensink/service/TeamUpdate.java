@@ -43,4 +43,8 @@ public class TeamUpdate {
         em.merge(upd);
         teamEventSrc.fire(upd);
     }
+
+    public void updateWithoutFire(Team upd) throws Exception {
+        em.merge(upd);
+    }
 }

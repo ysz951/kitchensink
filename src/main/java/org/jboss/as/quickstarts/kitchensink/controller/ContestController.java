@@ -29,10 +29,14 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jboss.as.quickstarts.kitchensink.data.ContestRepository;
 import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
+import org.jboss.as.quickstarts.kitchensink.model.Contest;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.model.Team;
+import org.jboss.as.quickstarts.kitchensink.service.ContestRegistration;
+import org.jboss.as.quickstarts.kitchensink.service.ContestUpdate;
 import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
 import org.jboss.as.quickstarts.kitchensink.service.TeamRegistration;
 import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
@@ -41,7 +45,7 @@ import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
 // Read more about the @Model stereotype in this FAQ:
 // http://www.cdi-spec.org/faq/#accordion6
 @Model
-public class TeamController {
+public class ContestController {
 
     @Inject
     private FacesContext facesContext;
@@ -61,52 +65,38 @@ public class TeamController {
     @Inject
     private MemberRepository memberRepository;
 
-    @Produces
-    @Named
-    private Team newTeam;
+    @Inject
+    private ContestRepository contestRepository;
 
     @Inject
-    private Event<Team> teamEventSrc;
+    private ContestUpdate contestUpdate;
+
+    @Inject
+    private ContestRegistration contestRegistration;
+
+    @Produces
+    @Named
+    private Contest newContest;
+
+    @Inject
+    private Event<Contest> contestEventSrc;
 
     @PostConstruct
-    public void initNewTeam() {
-        newTeam = new Team();
+    public void initNewContest() {
+        newContest = new Contest();
     }
 
-    public void register() throws Exception {
+    public void register(long teamId) throws Exception {
         try {
 
-            teamRegistration.register(newTeam);
+            Team team = teamRepository.findById(teamId);
+            contestRegistration.registerWithoutFire(newContest);
+            team.setContest(newContest);
+            teamUpdate.updateWithoutFire(team);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");
             facesContext.addMessage(null, m);
+            contestEventSrc.fire(newContest);
 //            initNewTeam();
-        } catch (Exception e) {
-            String errorMessage = getRootErrorMessage(e);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");
-            facesContext.addMessage(null, m);
-        }
-    }
-
-    public void registerAnother(long mem1, long mem2, long mem3, long coa) throws Exception {
-        try {
-            Member member1 = memberRepository.findById(mem1);
-            Member member2 = memberRepository.findById(mem2);
-            Member member3 = memberRepository.findById(mem3);
-            Member coach = memberRepository.findById(coa);
-            validateTeamMemberNumber(member1, member2, member3, coach);
-            teamRegistration.registerWithoutFire(newTeam);
-            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");
-            facesContext.addMessage(null, m);
-            member1.setTeam(newTeam);
-            memberUpdate.updateWithoutFire(member1);
-            member2.setTeam(newTeam);
-            memberUpdate.updateWithoutFire(member2);
-            member3.setTeam(newTeam);
-            memberUpdate.updateWithoutFire(member3);
-//            newTeam.setCoach(coach);
-//            teamUpdate.update(newTeam);
-
-            teamEventSrc.fire(newTeam);
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");

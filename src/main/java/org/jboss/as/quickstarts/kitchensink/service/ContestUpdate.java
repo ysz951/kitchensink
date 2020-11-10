@@ -16,14 +16,14 @@
  */
 package org.jboss.as.quickstarts.kitchensink.service;
 
-import org.jboss.as.quickstarts.kitchensink.data.ContestRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Contest;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.logging.Logger;
+
+import org.jboss.as.quickstarts.kitchensink.model.Contest;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
@@ -35,11 +35,15 @@ public class ContestUpdate {
     @Inject
     private EntityManager em;
 
-    
+    @Inject
+    private Event<Contest> contestEventSrc;
+
     public void update(Contest upd) throws Exception {
-//	 log.info(String.format("Member new name: %1$s", m.getName()));
-//     log.info(String.format("Member new phone number: %1$s", m.getPhoneNumber()));
-//     log.info(String.format("Member new email: %1$s", m.getEmail()));
+        em.merge(upd);
+        contestEventSrc.fire(upd);
+    }
+
+    public void updateWithoutFire(Contest upd) throws Exception {
         em.merge(upd);
     }
 }

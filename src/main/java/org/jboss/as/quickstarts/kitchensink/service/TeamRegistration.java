@@ -42,4 +42,8 @@ public class TeamRegistration {
         em.persist(team);
         teamEventSrc.fire(team);
     }
+
+    public void registerWithoutFire(Team team) throws Exception {
+        em.persist(team);
+    }
 }

@@ -124,7 +124,9 @@ input {
 
 
 /*  = Simple Table style (black header, grey/white stripes  */
-
+.none {
+	display:none;
+}
 .simpletablestyle {
   background-color:#E6E7E8;
   clear:both;

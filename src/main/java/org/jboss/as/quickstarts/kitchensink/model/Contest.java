@@ -54,16 +54,16 @@ public class Contest implements Serializable{
     @Column(nullable = false)
     private int capacity;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Date date;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private boolean registration_allowed;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Date registration_from;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Date registration_to;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "contest")

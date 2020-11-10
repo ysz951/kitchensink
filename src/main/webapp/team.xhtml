@@ -25,6 +25,8 @@
 		<h:link value="Member" outcome="index.xhtml" />
 		<h:outputText value="&#160;" />
 		<h:link value="Team" outcome="team.xhtml" />
+		<h:outputText value="&#160;" />
+        <h:link value="Contest" outcome="contest.xhtml" />
 		<h:form id="regTeam">
 			<h2>Team Registration</h2>
 			<h:panelGrid columns="3" columnClasses="titleCell">
@@ -32,12 +34,30 @@
 				<h:inputText id="teamname" value="#{newTeam.name}" />
 				<h:message for="teamname" errorClass="invalid" />
 
-				<h:outputLabel for="teammember" value="Team member:" />
-				<h:selectOneMenu id="teammember" binding="#{mem1}">
+				<h:outputLabel for="teammember1" value="Team member 1:" />
+				<h:selectOneMenu id="teammember1" binding="#{mem1}">
 					<f:selectItems value="#{members}" var="member"
 						itemValue="#{member.id}" itemLabel="#{member.name}" />
 				</h:selectOneMenu>
 				<br />
+				<h:outputLabel for="teammember2" value="Team member 2:" />
+                <h:selectOneMenu id="teammember2" binding="#{mem2}">
+                    <f:selectItems value="#{members}" var="member"
+                        itemValue="#{member.id}" itemLabel="#{member.name}" />
+                </h:selectOneMenu>
+                <br />
+                <h:outputLabel for="teammember3" value="Team member 3:" />
+                <h:selectOneMenu id="teammember3" binding="#{mem3}">
+                    <f:selectItems value="#{members}" var="member"
+                        itemValue="#{member.id}" itemLabel="#{member.name}" />
+                </h:selectOneMenu>
+                <br />
+                <h:outputLabel for="teamcoach" value="Team coach:" />
+                <h:selectOneMenu id="teamcoach" binding="#{coa}">
+                    <f:selectItems value="#{members}" var="member"
+                        itemValue="#{member.id}" itemLabel="#{member.name}" />
+                </h:selectOneMenu>
+                <br />
 				<h:outputLabel for="teamedit" value="Team Edit:" />
 				<h:selectOneMenu id="teamedit" value="#{newTeam.editTeam}">
 					<f:selectItem itemValue="true" itemLabel="True" />
@@ -48,13 +68,44 @@
 			<p>
 				<h:panelGrid columns="2">
 					<h:commandButton id="register"
-						action="#{teamController.registerAnother(mem1.value)}"
+						action="#{teamController.registerAnother(mem1.value, mem2.value, mem3.value, coa.value)}"
 						value="Register" styleClass="register" />
 					<h:messages styleClass="messages" errorClass="invalid"
 						infoClass="valid" warnClass="warning" globalOnly="true" />
 				</h:panelGrid>
 			</p>
 		</h:form>
+		<h:panelGroup rendered="#{empty teams}">
+			<em>No registered teams.</em>
+		</h:panelGroup>
 
+		<h:form>
+			<h:dataTable var="_team" value="#{teams}"
+				rendered="#{not empty teams}" styleClass="simpletablestyle">
+
+				<h:column>
+					<f:facet name="header">Id</f:facet>
+                #{_team.id}
+            </h:column>
+				<h:column>
+					<f:facet name="header">Name</f:facet>
+                #{_team.name}
+            </h:column>
+				<h:column>
+					<f:facet name="header">Edit?</f:facet>
+                #{_team.editTeam}
+            </h:column>
+				<h:column>
+					<h:dataTable var="_teamMember" value="#{_team.members}"
+						rendered="#{not empty _team.members}"
+						styleClass="simpletablestyle">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+                        #{_teamMember.id}
+                    </h:column>
+					</h:dataTable>
+				</h:column>
+			</h:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>

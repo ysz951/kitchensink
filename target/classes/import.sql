@@ -16,7 +16,15 @@
 --
 
 -- You can use this file to load seed data into the database using SQL statements
-insert into Member (id, name, email) values (0, 'John Smith1', 'john.smith1@mailinator.com')
-insert into Member (id, name, email) values (1, 'John Smith2', 'john.smith2@mailinator.com')
-insert into Member (id, name, email) values (2, 'John Smith3', 'john.smith3@mailinator.com')
-insert into Member (id, name, email) values (3, 'John Smith4', 'john.smith4@mailinator.com')
+insert into Member (id, name, email) values (0, 'John Smith0', 'john.smith0@mailinator.com')
+insert into Member (id, name, email) values (1, 'John Smith1', 'john.smith1@mailinator.com')
+insert into Member (id, name, email) values (2, 'John Smith2', 'john.smith2@mailinator.com')
+insert into Member (id, name, email) values (3, 'John Smith3', 'john.smith3@mailinator.com')
+insert into Member (id, name, email) values (4, 'John Smith4', 'john.smith4@mailinator.com')
+insert into Member (id, name, email) values (5, 'John Smith5', 'john.smith5@mailinator.com')
+insert into Member (id, name, email) values (6, 'John Smith6', 'john.smith6@mailinator.com')
+insert into Member (id, name, email) values (7, 'John Smith7', 'john.smith7@mailinator.com')
+insert into Member (id, name, email) values (8, 'John Smith8', 'john.smith8@mailinator.com')
+insert into Member (id, name, email) values (9, 'John Smith9', 'john.smith9@mailinator.com')
+insert into Member (id, name, email) values (10, 'John Smith10', 'john.smith10@mailinator.com')
+insert into Member (id, name, email) values (11, 'John Smith11', 'john.smith11@mailinator.com')
