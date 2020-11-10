@@ -16,6 +16,8 @@
  */
 package org.jboss.as.quickstarts.kitchensink.controller;
 
+
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Model;
@@ -29,52 +31,53 @@ import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.model.Team;
-import org.jboss.as.quickstarts.kitchensink.service.MemberDelete;
-import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
+import org.jboss.as.quickstarts.kitchensink.service.TeamRegistration;
+import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an
 // EL name
 // Read more about the @Model stereotype in this FAQ:
 // http://www.cdi-spec.org/faq/#accordion6
 @Model
-public class MemberController {
+public class TeamController {
 
     @Inject
     private FacesContext facesContext;
 
     @Inject
-    private MemberRegistration memberRegistration;
-
-    @Inject
-    private MemberDelete memberDelete;
+    private TeamRegistration teamRegistration;
 
     @Inject
     private MemberUpdate memberUpdate;
 
     @Inject
-    private MemberRepository repository;
-
-    @Produces
-    @Named
-    private Member newMember;
+    private TeamUpdate teamUpdate;
 
     @Inject
     private TeamRepository teamRepository;
 
     @Inject
+    private MemberRepository memberRepository;
+
+    @Produces
+    @Named
+    private Team newTeam;
+
+    @Inject
     private Event<Team> teamEventSrc;
 
     @PostConstruct
-    public void initNewMember() {
-        newMember = new Member();
+    public void initNewTeam() {
+        newTeam = new Team();
     }
 
     public void register() throws Exception {
         try {
-            memberRegistration.register(newMember);
+
+            teamRegistration.register(newTeam);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");
             facesContext.addMessage(null, m);
-            initNewMember();
+//            initNewTeam();
         } catch (Exception e) {
             String errorMessage = getRootErrorMessage(e);
             FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");
@@ -82,35 +85,52 @@ public class MemberController {
         }
     }
 
-    public void update(Member m, long teamId) throws Exception {
-    	try {
-    		Member upd = repository.findById(m.getId());
-    		Team team = teamRepository.findById(teamId);
-	        upd.setName(m.getName());
-	        upd.setEmail(m.getEmail());
-	        upd.setTeam(team);
-    		memberUpdate.update(upd);
-    		teamEventSrc.fire(team);
-    		FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_INFO, "Updated!", "Update successful");
-            facesContext.addMessage(null, mes);
-    	} catch (Exception e) {
-    		String errorMessage = getRootErrorMessage(e);
-            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Update unsuccessful");
-            facesContext.addMessage(null, mes);
-    	}
+    public void registerAnother(long memberId) throws Exception {
+        try {
+            Member member = memberRepository.findById(memberId);
+            teamRegistration.register(newTeam);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registered!", "Registration successful");
+            facesContext.addMessage(null, m);
+//            initNewTeam();
+//            Team team = teamRepository.findById(newTeam.getId());
+            member.setTeam(newTeam);
+            memberUpdate.update(member);
+            teamEventSrc.fire(newTeam);
+        } catch (Exception e) {
+            String errorMessage = getRootErrorMessage(e);
+            FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Registration unsuccessful");
+            facesContext.addMessage(null, m);
+        }
     }
 
-    public void delete(Member m) throws Exception {
-    	try {
-    		memberDelete.delete(m);
-    		FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_INFO, "Deleted!", "Deletion successful");
-            facesContext.addMessage(null, mes);
-    	} catch (Exception e) {
-    		String errorMessage = getRootErrorMessage(e);
-            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Deletion unsuccessful");
-            facesContext.addMessage(null, mes);
-    	}
-    }
+//
+//    public void update(Member m) throws Exception {
+//        try {
+//            Member upd = repository.findById(m.getId());
+//
+//            upd.setName(m.getName());
+//            upd.setEmail(m.getEmail());
+//            memberUpdate.update(m);
+//            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_INFO, "Updated!", "Update successful");
+//            facesContext.addMessage(null, mes);
+//        } catch (Exception e) {
+//            String errorMessage = getRootErrorMessage(e);
+//            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Update unsuccessful");
+//            facesContext.addMessage(null, mes);
+//        }
+//    }
+//
+//    public void delete(Member m) throws Exception {
+//        try {
+//            memberDelete.delete(m);
+//            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_INFO, "Deleted!", "Deletion successful");
+//            facesContext.addMessage(null, mes);
+//        } catch (Exception e) {
+//            String errorMessage = getRootErrorMessage(e);
+//            FacesMessage mes = new FacesMessage(FacesMessage.SEVERITY_ERROR, errorMessage, "Deletion unsuccessful");
+//            facesContext.addMessage(null, mes);
+//        }
+//    }
 
     private String getRootErrorMessage(Exception e) {
         // Default to general error message that registration failed.

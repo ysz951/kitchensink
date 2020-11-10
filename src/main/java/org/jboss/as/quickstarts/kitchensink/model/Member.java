@@ -20,19 +20,25 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @SuppressWarnings("serial")
 @Entity
@@ -53,22 +59,22 @@ public class Member implements Serializable {
     @NotEmpty
     @Email
     private String email;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     //annotation bellow is just for Jackson serialization in controller
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId=true)
     private Team team;
-    
+
     @OneToMany(mappedBy = "coach", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId=true)
     private Set<Team> coach_team = new HashSet<>();
-    
+
     public Long getId() {
         return id;
     }
@@ -108,6 +114,6 @@ public class Member implements Serializable {
 	public void setCoach_team(Set<Team> coach_team) {
 		this.coach_team = coach_team;
 	}
-    
-    
+
+
 }

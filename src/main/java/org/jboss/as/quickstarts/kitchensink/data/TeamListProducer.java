@@ -26,26 +26,26 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.jboss.as.quickstarts.kitchensink.model.Team;
 
 @RequestScoped
-public class MemberListProducer {
+public class TeamListProducer {
 
     @Inject
-    private MemberRepository memberRepository;
+    private TeamRepository teamRepository;
 
-    private List<Member> members;
+    private List<Team> teams;
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
     // Facelets or JSP view)
     @Produces
     @Named
-    public List<Member> getMembers() {
-        return members;
+    public List<Team> getTeams() {
+        return teams;
     }
 
-    public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Member member) {
-        retrieveAllMembersOrderedById();
+    public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Team team) {
+        retrieveAllTeamsOrderedById();
     }
 
 //    @PostConstruct
@@ -54,7 +54,7 @@ public class MemberListProducer {
 //    }
 
     @PostConstruct
-    public void retrieveAllMembersOrderedById() {
-        members = memberRepository.findAllOrderedById();
+    public void retrieveAllTeamsOrderedById() {
+        teams = teamRepository.findAllOrderedById();
     }
 }

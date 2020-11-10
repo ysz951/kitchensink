@@ -1,0 +1,12 @@
+# Created by buildmetadata-maven-plugin 1.7.0 ( SHA: 6f444cae ) 
+build.maven.version=3.6.3
+build.version=7.2.0.GA
+build.java.vm=Java HotSpot(TM) 64-Bit Server VM
+build.version.full=7.2.0.GA
+build.java.compiler=HotSpot 64-Bit Tiered Compilers
+build.maven.execution.cmdline=wildfly\:deploy
+build.groupId=org.jboss.eap.quickstarts
+build.java.vendor=Oracle Corporation
+build.java.runtime.name=Java(TM) SE Runtime Environment
+build.java.runtime.version=15.0.1+9-18
+build.artifactId=kitchensink_temp

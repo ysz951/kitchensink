@@ -17,16 +17,25 @@
 package org.jboss.as.quickstarts.kitchensink.model;
 
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @SuppressWarnings("serial")
 @Entity
@@ -42,10 +51,10 @@ public class Team implements Serializable {
     @Size(min = 1, max = 25)
     @Pattern(regexp = "[^0-9]*", message = "Must not contain numbers")
     private String name;
-    
+
     @NotNull
-    private boolean editTeam;
-    
+    private boolean editTeam = true;
+
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -53,22 +62,22 @@ public class Team implements Serializable {
     @JsonIdentityReference(alwaysAsId=true)
     @Size(max = 3)
     private Set<Member> members = new HashSet<>();
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId=true)
     private Member coach;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     //annotation bellow is just for Jackson serialization in controller
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,
             property = "id")
     @JsonIdentityReference(alwaysAsId=true)
     private Contest contest;
-    
+
     public Long getId() {
         return id;
     }
@@ -116,6 +125,6 @@ public class Team implements Serializable {
 	public void setEditTeam(boolean editTeam) {
 		this.editTeam = editTeam;
 	}
-    
-    
+
+
 }

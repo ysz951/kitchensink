@@ -16,14 +16,14 @@
  */
 package org.jboss.as.quickstarts.kitchensink.service;
 
-import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Team;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.logging.Logger;
+
+import org.jboss.as.quickstarts.kitchensink.model.Team;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Stateless
@@ -35,9 +35,12 @@ public class TeamUpdate {
     @Inject
     private EntityManager em;
 
-    
+    @Inject
+    private Event<Team> teamEventSrc;
+
     public void update(Team upd) throws Exception {
 
         em.merge(upd);
+        teamEventSrc.fire(upd);
     }
 }

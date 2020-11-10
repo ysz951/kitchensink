@@ -16,5 +16,7 @@
 --
 
 -- You can use this file to load seed data into the database using SQL statements
-truncate Member;
-truncate Team;
+insert into Member (id, name, email) values (0, 'John Smith1', 'john.smith1@mailinator.com')
+insert into Member (id, name, email) values (1, 'John Smith2', 'john.smith2@mailinator.com')
+insert into Member (id, name, email) values (2, 'John Smith3', 'john.smith3@mailinator.com')
+insert into Member (id, name, email) values (3, 'John Smith4', 'john.smith4@mailinator.com')
