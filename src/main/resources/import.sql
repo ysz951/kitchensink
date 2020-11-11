@@ -16,6 +16,7 @@
 --
 
 -- You can use this file to load seed data into the database using SQL statements
+TRUNCATE TABLE Member
 insert into Member (id, name, email) values (0, 'John Smith0', 'john.smith0@mailinator.com')
 insert into Member (id, name, email) values (1, 'John Smith1', 'john.smith1@mailinator.com')
 insert into Member (id, name, email) values (2, 'John Smith2', 'john.smith2@mailinator.com')

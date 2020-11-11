@@ -25,18 +25,13 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
         -->
-        <version>7.2.0.GA</version>
+        <version>7.3.0.GA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>15</java.version>
-	</properties>
     <artifactId>kitchensink_temp</artifactId>
     <packaging>war</packaging>
     <name>Quickstart: kitchensink</name>
-    <description>A starter Java EE web application project for use in JBoss EAP, generated from the jboss-javaee6-webapp archetype</description>
+    <description>A starter Jakarta EE web application project for use in JBoss EAP</description>
 
     <licenses>
         <license>
@@ -47,21 +42,21 @@
     </licenses>
 
     <dependencies>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-annotations</artifactId>
-		    <version>2.10.3</version>
-		</dependency>
-		
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.10.3</version>
+        </dependency>
+
         <!-- First declare the APIs we depend on and need for compilation. All
             of them are provided by JBoss EAP -->
 
         <!-- Import the CDI API, we use provided scope as the API is included in
             JBoss EAP -->
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -81,6 +76,12 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Jakarta Activation needed for JPA model generation -->
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Bean Validation Implementation 
              Provides portable constraints such as @Email 
@@ -88,6 +89,12 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- hibernate-validator dependencies excluded on server dependency management yet required -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -102,8 +109,8 @@
         <!-- Import the JPA API, we use provided scope as the API is included in
             JBoss EAP -->
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -159,8 +166,7 @@
             <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
             <scope>provided</scope>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/org.jboss.el/jboss-el -->
-		
+
     </dependencies>
 
     <build>
