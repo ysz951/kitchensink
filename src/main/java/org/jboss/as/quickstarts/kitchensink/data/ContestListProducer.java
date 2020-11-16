@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.kitchensink.data;
+package org.jboss.as.quickstarts.kitchensink_web.data;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.as.quickstarts.kitchensink.model.Contest;
+import org.jboss.as.quickstarts.kitchensink_web.model.Contest;
 
 @RequestScoped
 public class ContestListProducer {

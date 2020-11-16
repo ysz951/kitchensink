@@ -1,4 +1,4 @@
-package org.jboss.as.quickstarts.kitchensink.controller;
+package org.jboss.as.quickstarts.kitchensink_web.controller;
 
 
 import javax.faces.bean.ManagedProperty;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.kitchensink.controller;
+package org.jboss.as.quickstarts.kitchensink_web.controller;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
@@ -25,13 +25,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
-import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Member;
-import org.jboss.as.quickstarts.kitchensink.model.Team;
-import org.jboss.as.quickstarts.kitchensink.service.MemberDelete;
-import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
-import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
+import org.jboss.as.quickstarts.kitchensink_web.data.MemberRepository;
+import org.jboss.as.quickstarts.kitchensink_web.data.TeamRepository;
+import org.jboss.as.quickstarts.kitchensink_web.model.Member;
+import org.jboss.as.quickstarts.kitchensink_web.model.Team;
+import org.jboss.as.quickstarts.kitchensink_web.service.MemberDelete;
+import org.jboss.as.quickstarts.kitchensink_web.service.MemberRegistration;
+import org.jboss.as.quickstarts.kitchensink_web.service.MemberUpdate;
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an
 // EL name
 // Read more about the @Model stereotype in this FAQ:

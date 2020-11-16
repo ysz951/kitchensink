@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.kitchensink.util;
+package org.jboss.as.quickstarts.kitchensink_web.util;
 
 import java.util.logging.Logger;
 

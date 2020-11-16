@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.kitchensink.rest;
+package org.jboss.as.quickstarts.kitchensink_web.rest;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,12 +42,12 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.as.quickstarts.kitchensink.data.TeamRepository;
-import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
-import org.jboss.as.quickstarts.kitchensink.model.Team;
-import org.jboss.as.quickstarts.kitchensink.model.Member;
-import org.jboss.as.quickstarts.kitchensink.service.TeamRegistration;
-import org.jboss.as.quickstarts.kitchensink.service.TeamUpdate;
+import org.jboss.as.quickstarts.kitchensink_web.data.TeamRepository;
+import org.jboss.as.quickstarts.kitchensink_web.data.MemberRepository;
+import org.jboss.as.quickstarts.kitchensink_web.model.Team;
+import org.jboss.as.quickstarts.kitchensink_web.model.Member;
+import org.jboss.as.quickstarts.kitchensink_web.service.TeamRegistration;
+import org.jboss.as.quickstarts.kitchensink_web.service.TeamUpdate;
 //import org.jboss.as.quickstarts.kitchensink.service.MemberUpdate;
 //import org.jboss.as.quickstarts.kitchensink.service.MemberDelete;
 /**
